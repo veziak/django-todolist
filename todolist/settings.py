@@ -9,10 +9,12 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import logging
 import os
+import environ
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
+env = environ.Env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -22,8 +24,6 @@ SECRET_KEY = "@e2(yx)v&tgh3_s=0yja-i!dpebxsz^dg47x)-k&kq_3zf*9e*"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
@@ -57,16 +57,12 @@ ROOT_URLCONF = "todolist.urls"
 
 WSGI_APPLICATION = "todolist.wsgi.application"
 
+ALLOWED_HOSTS = ['*']
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
+DATABASES = {'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3')}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -116,3 +112,29 @@ TEMPLATES = [
         },
     },
 ]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "root": {
+        "level": logging.INFO,
+        "handlers": ["console"],
+    },
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s [%(levelname)-8s] %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+        "aws": {
+            # you can add specific format for aws here
+            "format": "%(asctime)s [%(levelname)-8s] %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+}
