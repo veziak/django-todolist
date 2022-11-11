@@ -4,4 +4,4 @@ djangorestframework
 pytz
 sqlparse
 django-environ
-psycopg2
+psycopg2-binary
